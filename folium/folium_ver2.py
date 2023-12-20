@@ -4,7 +4,7 @@ from skyfield.api import load, EarthSatellite
 from datetime import timedelta
 from tqdm import tqdm
 
-tle_data = read_tle.read_tle_file('../input_data/tle_list.txt')
+tle_data = read_tle.read_tle_file('../input_data/k3a_k5_tle.txt')
 
 # TLE 데이터를 위성 객체로 변환
 ts = load.timescale()
@@ -17,12 +17,14 @@ for name, tle_line1, tle_line2 in tle_data:
 # 시작 날짜와 끝 날짜 설정 (예시로 1일치 궤도를 전파)
 original_start_date = ts.utc(2022, 10, 21)
 end_date = original_start_date + timedelta(days=1)
-time_step = timedelta(minutes=1)
+time_step = timedelta(seconds=30)
 
 # 지도 초기화
 m = folium.Map(location=[38.921389, -77.065556], zoom_start=5)
 
-colors = ['b', 'r', 'g', 'c', 'm', 'y', 'k', 'purple', 'orange', 'brown']  # 원하는 색상 리스트를 추가
+# colors = ['b', 'r', 'g', 'c', 'm', 'y', 'k', 'purple', 'orange', 'brown']  # 원하는 색상 리스트를 추가
+colors = ['blue', 'red', 'green', 'cyan', 'magenta', 'yellow', 'black', 'purple', 'orange', 'brown']
+
 color_index = 0  # 색상 인덱스 초기화
 
 # 궤도 계산 및 지도에 그리기
@@ -37,11 +39,12 @@ for i, (satellite, name) in enumerate(tqdm(satellites)):
         lat, lon = topocentric.latitude.degrees, topocentric.longitude.degrees  # degrees 속성 사용
         if lons and abs(lon - lons[-1]) > 180:
             # 경도가 180에서 -180으로 바뀌면 선이 이어지지 않도록 중단
-            coordinates = list(zip(lats, lons))  
+            coordinates = list(zip(lats, lons))
             folium.PolyLine(
                 locations=coordinates,
                 color=line_color,
-                fill=True,
+                weight=3,
+                # fill=True,
                 ).add_to(m)
             lats, lons = [],[]
 
@@ -52,8 +55,9 @@ for i, (satellite, name) in enumerate(tqdm(satellites)):
     folium.PolyLine(
         locations=coordinates,
         color=line_color,
-        fill=True,
+        weight=3,
+        # fill=True,
     ).add_to(m)        
 
 # 지도 저장
-m.save('../folium_output/orbit_map.html')
+m.save('../folium_output/orbit_map2.html')
