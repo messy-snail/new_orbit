@@ -33,4 +33,4 @@ while start_date.tt < end_date.tt:
     start_date += time_step
 
 # 지도 저장
-m.save('orbit_map.html')
+m.save('../folium_output/orbit_map.html')

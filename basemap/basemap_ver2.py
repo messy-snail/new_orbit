@@ -1,21 +1,13 @@
-import read_tle
+from utils import read_tle
 import matplotlib.pyplot as plt
 from mpl_toolkits.basemap import Basemap
 from skyfield.api import load, EarthSatellite
-from datetime import datetime, timedelta
+from datetime import timedelta
 from tqdm import tqdm
 
-
 # 위성 TLE 데이터
-
-tle_data = read_tle.read_tle_file('tle_list.txt')
-# 읽어온 TLE 정보 출력 (테스트용)
-# tle_data = [
-#     ('KOMPSAT-3A', '1 38338U 12025B   23297.62525709  .00000910  00000+0  19013-3 0  9990',
-#      '2 38338  98.2322 239.1614 0008989 258.8215 101.1975 14.62228630610087'),
-#     ('KOMPSAT-5', '1 39227U 13042A   23297.59983914  .00003163  00000+0  23031-3 0  9998',
-#      '2 39227  97.6188 121.8189 0001654 136.7816 223.3540 15.04489647558524')
-# ]
+# tle_data = read_tle.read_tle_file('../input_data/tle_list.txt')
+tle_data = read_tle.read_tle_file('../input_data/k3a_k5_tle.txt')
 
 # TLE 데이터를 위성 객체로 변환
 ts = load.timescale()

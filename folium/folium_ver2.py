@@ -1,11 +1,10 @@
-import read_tle
+from utils import read_tle
 import folium
-from skyfield.api import load, Topos, EarthSatellite
-from datetime import datetime, timedelta
+from skyfield.api import load, EarthSatellite
+from datetime import timedelta
 from tqdm import tqdm
 
-tle_data = read_tle.read_tle_file('tle_list.txt')
-
+tle_data = read_tle.read_tle_file('../input_data/tle_list.txt')
 
 # TLE 데이터를 위성 객체로 변환
 ts = load.timescale()
@@ -57,4 +56,4 @@ for i, (satellite, name) in enumerate(tqdm(satellites)):
     ).add_to(m)        
 
 # 지도 저장
-m.save('orbit_map.html')
+m.save('../folium_output/orbit_map.html')
