@@ -4,7 +4,7 @@ from skyfield.api import load, EarthSatellite
 from datetime import timedelta
 from tqdm import tqdm
 
-tle_data = read_tle.read_tle_file('../input_data/k3a_k5_tle.txt')
+tle_data = read_tle.read_tle_file('../input_data/k3a_tle.txt')
 
 # TLE 데이터를 위성 객체로 변환
 ts = load.timescale()

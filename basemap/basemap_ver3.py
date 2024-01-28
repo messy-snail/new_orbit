@@ -19,7 +19,7 @@ for name, tle_line1, tle_line2 in tle_data:
 
 # 시작 날짜와 끝 날짜 설정 (예시로 1일치 궤도를 전파)
 original_start_date = ts.utc(2023, 10, 21)
-end_date = original_start_date + timedelta(days=0.1)
+end_date = original_start_date + timedelta(days=0.3)
 time_step = timedelta(minutes=1)
 
 # 지도 초기화
@@ -45,21 +45,31 @@ for i, (satellite, name) in enumerate(tqdm(satellites)):
     linestyle = linestyle_list[i % len(linestyle_list)]  # 선 스타일 순환
 
     start_date = original_start_date
+    prev_lat = None  # 이전 위도 값 초기화
+
     while start_date.tt < end_date.tt:
         topocentric = satellite.at(start_date).subpoint()
         lat, lon = topocentric.latitude.degrees, topocentric.longitude.degrees
 
+        # 승교점 감지 로직
+        if prev_lat is not None and prev_lat > 0 and lat < 0:
+            # 승교점을 지날 때마다 선의 색상을 변경
+            m.plot(lons, lats, color=line_color, linestyle=linestyle, linewidth=2)  # 현재 색상의 선 그리기
+            lats, lons = [], []
+            line_color = colors[color_index]  # 다음 색상으로 변경
+            color_index = (color_index + 1) % len(colors)  # 다음 색상으로 순환
+
         if lons and abs(lon - lons[-1]) > 180:
-            # 경도가 180에서 -180으로 바뀌면 선이 이어지지 않도록 중단
-            m.plot(lons, lats, color=line_color, linestyle=linestyle, linewidth=1)  # 선의 색상을 설정
-            lats, lons = [],[]
+            m.plot(lons, lats, color=line_color, linestyle=linestyle, linewidth=2)
+            lats, lons = [], []
 
         lats.append(lat)
         lons.append(lon)
+        prev_lat = lat  # 이전 위도 업데이트
         start_date += time_step
-        
-    line, = m.plot(lons, lats, color=line_color, linestyle=linestyle, linewidth=1)  # 선의 색상과 스타일을 설정
-    legend_lines.append(line)  # Line2D 객체를 레전드 리스트에 추가
+
+    line, = m.plot(lons, lats, color=line_color, linestyle=linestyle, linewidth=2)
+    legend_lines.append(line)
 
 # 레전드 추가 (레전드 라인과 위성 이름을 함께 표시)
 legend_labels = [name for i, (_, name) in enumerate(satellites)]

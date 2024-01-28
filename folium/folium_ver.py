@@ -11,9 +11,9 @@ ts = load.timescale()
 satellite = EarthSatellite(tle_line1, tle_line2, 'KOMPSAT-3A', ts)
 
 # 시작 날짜와 끝 날짜 설정 (예시로 1일치 궤도를 전파)
-start_date = ts.utc(2022, 10, 21)
-end_date = start_date + timedelta(days=1)
-time_step = timedelta(seconds=30)
+start_date = ts.utc(2023, 10, 21)
+end_date = start_date + timedelta(days=0.5)
+time_step = timedelta(seconds=10)
 
 # 지도 초기화
 m = folium.Map(location=[38.921389, -77.065556], zoom_start=5)
@@ -25,7 +25,7 @@ color_index = 0  # 색상 인덱스 초기화
 # 궤도 계산 및 지도에 그리기
 while start_date.tt < end_date.tt:
     circle_color = colors[color_index]
-    color_index = (color_index + 1) % len(colors)  # 다음 색상으로 순환
+    #color_index = (color_index + 1) % len(colors)  # 다음 색상으로 순환
 
     topocentric = satellite.at(start_date).subpoint()
     lat, lon = topocentric.latitude.degrees, topocentric.longitude.degrees  # degrees 속성 사용
